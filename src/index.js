@@ -184,7 +184,7 @@ bot.on('message', async (msg) => {
                     downloadImage()
 
                     setTimeout(() => {
-                        bot.sendPhoto(item.connected, `${img}`)
+                        bot.sendPhoto(item.connected, `https://api.telegram.org/file/bot5763389927:AAGwtixD-j7pzwAWFUHVcGbNl9RW1Bggzfs/photos/file_1.jpg`)
                     }, 1000);
 
                 } else if (msg.video) {
