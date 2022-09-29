@@ -184,7 +184,7 @@ bot.on('message', async (msg) => {
                     downloadImage()
 
                     setTimeout(() => {
-                        bot.sendPhoto(item.connected, `./images/${name}_${connectedUser.name}__${hour}_${minute}__${day}_${month}_${year}___${now}.jpg`)
+                        bot.sendPhoto(item.connected, `${img}`)
                     }, 1000);
 
                 } else if (msg.video) {
