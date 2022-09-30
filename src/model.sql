@@ -8,4 +8,4 @@ CREATE TABLE users (
 );
 
 insert into users(user_id, name, username, is_active, connected)
-values (1564651, 'Hakuna <<', 'matata', false, 0);
+values (1564651, 'Hakuna <<', 'matata', false, 0); 

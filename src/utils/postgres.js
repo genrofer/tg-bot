@@ -3,8 +3,19 @@ const { connectionString } = require('../config/config')
 
 const pool = new Pool({
      connectionString: connectionString
-})
+     // host: 'localhost',
+     // user: 'isroilsi_geno',
+     // password: 'Muzaffarbek04',
+     // port: 5432, 
+     // database: 'isroilsi_telegram_bot' 
 
+     // host: 'localhost',
+     // port: 5432,
+     // password: 'Muzaffarbek04'
+
+     // postgres://isroilsi_telegram_bot1:txKeAULHJD@server2.ahost.cloud/isroilsi_telegram_bot
+})
+  
 const fetch = async (SQL, ...params) => {
      const client = await pool.connect()
 

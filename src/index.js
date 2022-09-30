@@ -2,7 +2,6 @@ require('dotenv').config()
 const TelegramBot = require('node-telegram-bot-api');
 const express = require('express')
 const model = require("./modules/model")
-const fs = require('fs')
 const axios = require("axios")
 const path = require("path")
 const app = express()
@@ -16,6 +15,14 @@ app.get("/", async (req, res) => {
 const vaqt = new Date()
 const token = process.env.TOKEN;
 const bot = new TelegramBot(token, { polling: true });
+
+// Media sending
+
+const sendPhoto = `https://api.telegram.org/bot${token}/sendPhoto`
+const sendVideo = `https://api.telegram.org/bot${token}/sendVideo`
+const sendSticker = `https://api.telegram.org/bot${token}/sendSticker`
+const sendAnimation = `https://api.telegram.org/bot${token}/sendAnimation`
+const sendAudio = `https://api.telegram.org/bot${token}/sendAudio`
 
 bot.onText(/\/echo (.+)/, (msg, match) => {
     const chatId = msg.chat.id;
@@ -125,10 +132,7 @@ bot.on('message', async (msg) => {
     const minute = vaqt.getMinutes()
     const now = Date.now()
 
-    // const video = (await bot.getFileLink(msg.video?.file_id)).toString();
-    // const sticker = (await bot.getFileLink(msg.sticker?.file_id)).toString();
-    // const gif = (await bot.getFileLink(msg.animation?.file_id)).toString();
-    // const audio = (await bot.getFileLink(msg.audio?.file_id)).toString();
+
 
     // https://api.telegram.org/file/bot5763389927:AAGwtixD-j7pzwAWFUHVcGbNl9RW1Bggzfs/photos/file_1.jpg
 
@@ -157,42 +161,29 @@ bot.on('message', async (msg) => {
 
     users.map(item => {
         if (item.user_id == chatId) {
+            const first_text = msg.text?.split('')[0]
 
-            if (item.connected != 0 && msg.text != '/suhbatdosh' && msg.text != '/start' && msg.text != '/stop') {
-                const connectedUser = users.find(user => user.user_id == item.connected)
+            if (item.connected != 0 && first_text != '/') {
                 if (msg.text) {
-                    bot.sendMessage(item.connected, `${message}`);
+                    bot.sendMessage(item.connected, `${message}`); 
 
                 } else if (msg.photo) {
-                    async function downloadImage() {
-                        let img = (await bot.getFileLink(msg.photo[2] ? msg?.photo[2]?.file_id : msg?.photo[1]?.file_id)).toString();
-                        const url = img ? img : ''
-                        const paths = path.resolve(__dirname, 'images', `${name}_${connectedUser.name}__${hour}_${minute}__${day}_${month}_${year}___${now}.jpg`)
-                        const writer = fs.createWriteStream(paths)
-
-                        const response = await axios({
-                            url,
-                            method: 'GET',
-                            responseType: 'stream'
-                        })
-                        response.data.pipe(writer)
-                        return new Promise((resolve, reject) => {
-                            writer.on('finish', resolve)
-                            writer.on('error', reject)
-                        })
-                    }
-                    downloadImage()
-
-                    setTimeout(() => {
-                        bot.sendPhoto(item.connected, `https://api.telegram.org/file/bot5763389927:AAGwtixD-j7pzwAWFUHVcGbNl9RW1Bggzfs/photos/file_1.jpg`)
-                    }, 1000);
+                    let img = msg.photo[2] ? msg?.photo[2]?.file_id : msg?.photo[1]?.file_id
+                    axios.get(`${sendPhoto}?chat_id=${item.connected}&photo=${img}`)
 
                 } else if (msg.video) {
-                    bot.sendVideo(item.connected, `${video}`)
-                } else if (msg.sticker) {
-                    bot.sendSticker(item.connected, `${sticker}`)
+                    const video = msg.video?.file_id
+                    axios.get(`${sendVideo}?chat_id=${item.connected}&video=${video}`)
+
+                } else if (msg.sticker) { 
+                    const sticker = msg.sticker?.file_id;
+                    axios.get(`${sendSticker}?chat_id=${item.connected}&sticker=${sticker}`)
                 } else if (msg.animation) {
-                    bot.sendAnimation(item.connected, `${gif}`)
+                    const gif = msg.animation?.file_id
+                    axios.get(`${sendAnimation}?chat_id=${item.connected}&animation=${gif}`)
+                } else if (msg.audio) {
+                    const audio = msg.audio?.file_id
+                    axios.get(`${sendAudio}?chat_id=${item.connected}&audio=${audio}`)
                 }
             }
         }
@@ -200,13 +191,14 @@ bot.on('message', async (msg) => {
             if (Number(item.connected) < 100 && item.is_active == true && msg.text != '/start' && msg.text != '/suhbatdosh') {
                 bot.sendMessage(chatId, `Sizga suhbatdosh qidiryapma-a-a-a-n !!!!!`)
             }
-        } 
+        }
 
         if (item.user_id != chatId && msg.text != '/suhbatdosh' && msg.text != '/start' && item.connected == 0) {
             bot.sendMessage(chatId, `Suhbatdosh qidirish uchun /suhbatdosh buyrug'ini bosing !`)
         }
-    })   
-});     
+    })
+    console.log(msg)
+});
 
 app.listen(process.env.PORT || 5000, async () => {
     console.log('🚀 app running on port', process.env.PORT || 5000)
