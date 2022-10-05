@@ -13,7 +13,7 @@ mongoose
     .connect('mongodb+srv://Muzaffar:Muzaffarbek04@telegrambot.nfdozec.mongodb.net/users?retryWrites=true&w=majority')
     .then(() => console.log('Connected'))
 
-app.get("/", async (req, res) => {
+app.get("/", async (req, res) => { 
     const users = await User.find({})
     res.send(users)
 })
@@ -74,8 +74,6 @@ bot.on('callback_query', async (callbackQuery) => {
         bot.deleteMessage(chatId, msg.message_id)
         users?.map(async user => {
             if (user.is_active == true && user.user_id != chatId) {
-                // user.is_active = false
-                // const editedUser = model.editUser(false, chatId, user.user_id)
                 const changeId = users.find(e => e.is_active == true)
                 console.log(changeId)
                 const user = new User({
@@ -92,7 +90,6 @@ bot.on('callback_query', async (callbackQuery) => {
                         updatedUser.is_active = false
                         updatedUser.connected = chatId
                         updatedUser.save() 
-                        // res.send("okeyey")
                     })
                 } catch (error) {
                     console.log(error)
