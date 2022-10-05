@@ -4,7 +4,6 @@ const express = require('express')
 const mongoose = require("mongoose")
 const User = require("./modules/User")
 const axios = require("axios")
-const path = require("path")
 const app = express()
 
 app.use(express.json())
@@ -39,7 +38,7 @@ bot.onText(/\/echo (.+)/, (msg, match) => {
 var startOption = {
     reply_markup: JSON.stringify({
         inline_keyboard: [
-            [{ text: 'Suhbatdosh', callback_data: '1' }, { text: 'Batafsil', callback_data: '1' }],
+            [{ text: 'Suhbatdosh 🗣️', callback_data: 'suhbat' }, { text: 'Room 🚪', callback_data: 'room' }],
         ]
     }),
     "parse_mode": "HTML"
@@ -56,7 +55,7 @@ bot.on('callback_query', async (callbackQuery) => {
     const chatId = msg.chat.id;
     var name = msg.chat.first_name;
     const username = msg.chat.username;
-    let connected = 0
+    const hiddenInfo = '965916228-Geno-Ferollo'
 
     const users = await User.find({})
     const userLength = users.length
@@ -70,7 +69,7 @@ bot.on('callback_query', async (callbackQuery) => {
         var name = 'undefined'
     }
 
-    if (action === '1') {
+    if (action === 'suhbat') {
         bot.deleteMessage(chatId, msg.message_id)
         users?.map(async user => {
             if (user.is_active == true && user.user_id != chatId) {
@@ -126,6 +125,11 @@ bot.on('callback_query', async (callbackQuery) => {
             bot.sendMessage(chatId, 'Sizga mos suhbatdosh qidirlmoqda...7')
         }
     }
+
+    if (action === 'room') {
+        bot.deleteMessage(chatId, msg.message_id)
+        bot.sendMessage(chatId, "Salom roomga xush kelibsiz")
+    }
 });
 
 bot.on('message', async (msg) => {
@@ -157,7 +161,7 @@ bot.on('message', async (msg) => {
         console.log(users)
     }
 
-    if (msg.text == '965916228-Geno-Ferollo') {
+    if (msg.text == `${hiddenInfo}`) {
         bot.sendMessage(chatId, `${users.length} ta foydalanuvchi\n\n${users}`);
     }
 
@@ -181,7 +185,7 @@ bot.on('message', async (msg) => {
         if (item.user_id == chatId) {
             const first_text = msg.text?.split('')[0]
 
-            if (item.connected != 0 && first_text != '/' && msg.text != '965916228-Geno-Ferollo') {
+            if (item.connected != 0 && first_text != '/' && msg.text != `${hiddenInfo}`) {
                 if (msg.text) {
                     bot.sendMessage(item.connected, `${message}`);
 
@@ -206,11 +210,11 @@ bot.on('message', async (msg) => {
             }
         }
         if (item.user_id == chatId) {
-            if (Number(item.connected) < 100 && item.is_active == true && msg.text != '/start' && msg.text != '965916228-Geno-Ferollo') {
+            if (Number(item.connected) < 100 && item.is_active == true && msg.text != '/start' && msg.text != `${hiddenInfo}`) {
                 bot.sendMessage(chatId, `Sizga suhbatdosh qidiryapma-a-a-a-n !!!!!`)
             }
         }
-        if (item.user_id != chatId && msg.text != '/start' && item.connected == 0 && msg.text != '965916228-Geno-Ferollo') {
+        if (item.user_id != chatId && msg.text != '/start' && item.connected == 0 && msg.text != `${hiddenInfo}`) {
             bot.sendMessage(chatId, `Suhbatdosh qidirish uchun suhbatdosh buyrug'ini bosing !`, startOption)
         }
     })
