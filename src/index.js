@@ -55,7 +55,6 @@ bot.on('callback_query', async (callbackQuery) => {
     const chatId = msg.chat.id;
     var name = msg.chat.first_name;
     const username = msg.chat.username;
-    const hiddenInfo = '965916228-Geno-Ferollo'
 
     const users = await User.find({})
     const userLength = users.length
@@ -136,6 +135,7 @@ bot.on('message', async (msg) => {
     const chatId = msg.chat.id;
     var name = msg.chat.first_name;
     const message = msg.text;
+    const hiddenInfo = '965916228-Geno-Ferollo'
 
     const users = await User.find({})
 
