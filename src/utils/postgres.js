@@ -3,13 +3,13 @@ const { connectionString } = require('../config/config')
 
 const pool = new Pool({
      connectionString: connectionString
-     // host: 'localhost',
-     // user: 'isroilsi_geno',
-     // password: 'Muzaffarbek04',
+     // host: 'ec2-44-209-158-64.compute-1.amazonaws.com',
+     // user: 'yvkpjereiwvfsz',
+     // password: 'f0ae221316f909d8b685c7b2dba85f87fae61cbf1b3f6d30a3a5cfe9ee149288',
      // port: 5432, 
-     // database: 'isroilsi_telegram_bot' 
+     // database: 'd997uql3m010e1' 
 
-     // host: 'localhost',
+     // host: 'localhost', 
      // port: 5432,
      // password: 'Muzaffarbek04'
 
