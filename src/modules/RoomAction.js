@@ -341,7 +341,7 @@ const RoomMsg = async (msg, Room, name) => {
      let user_room = {}
      let selectedRoom = []
      let joinedMembers = []
-     const splitedMsg = msg?.text.split(' ')
+     const splitedMsg = msg.text ? msg.text.split(' ') : null
 
      Rooms?.map(room => {
           all_rooms.push(room.creator_id)
