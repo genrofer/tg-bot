@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 
-const UserSchema = new mongoose.Schema({
+const AllUserSchema = new mongoose.Schema({
      user_id: {
           type: Number,
           required: true
@@ -13,16 +13,16 @@ const UserSchema = new mongoose.Schema({
           type: String,
           required: true
      },
-     is_active: {
-          type: Boolean,
+     language: {
+          type: String,
           required: true
      },
-     connected: {
-          type: Number,
+     joined: {
+          type: String,
           required: true
-     },
+     }
 })
 
-const User = mongoose.model("User", UserSchema)
+const AllUser = mongoose.model("all-users", AllUserSchema)
 
-module.exports = User
+module.exports = AllUser
