@@ -79,7 +79,7 @@ const RoomAction = async (action, msg, chatId, Room, name) => {
                bot.sendMessage(chatId, `Roomlar soni ${ActiveRooms} ta`, AllRooms)
           }, 500);
      }
-     const splitedAction = action.split(' ')
+     const splitedAction = action?.split(' ')
      console.log(splitedAction)
      if (splitedAction[0] == 'room') {
           if (action === `room ${splitedAction[1]}`) {
@@ -341,7 +341,7 @@ const RoomMsg = async (msg, Room, name) => {
      let user_room = {}
      let selectedRoom = []
      let joinedMembers = []
-     const splitedMsg = msg.text.split(' ')
+     const splitedMsg = msg?.text.split(' ')
 
      Rooms?.map(room => {
           all_rooms.push(room.creator_id)
