@@ -9,15 +9,29 @@ const vaqt = new Date()
 const year = vaqt.getFullYear()
 const monthes = vaqt.getMonth()
 const day = vaqt.getDate()
-const hour = vaqt.getHours()
-const minute = vaqt.getMinutes()
+const hours = vaqt.getHours()
+const minutes = vaqt.getMinutes()
 
 var month;
+var hour;
+var minute
 
 if(monthes < 10){
      month = `0${monthes}`
 } else {
      month = monthes
+}
+
+if(hours < 10){
+     hour = `0${hours}`
+} else {
+     hour = hours
+}
+
+if(minutes < 10){
+     minute = `0${minutes}`
+} else {
+     minute = minutes
 }
 
 const RoomAction = async (action, msg, chatId, Room, name) => {
@@ -260,7 +274,7 @@ const RoomAction = async (action, msg, chatId, Room, name) => {
                     room_members_count: 0,
                     room_members: [],
                     room_active: false,
-                    room_created: `${hour}:${minute}  ${day}/${month}/${year}`
+                    room_created: `${hour}:${minute}--${day}/${month}/${year}`
                })
                try { await room.save() } catch (error) { console.log(error) }
                bot.sendMessage(chatId, `Roomga ism kiriting \n\nMasalan: Suhbatlashish`)
