@@ -91,16 +91,16 @@ bot.on('message', async (msg) => {
         // bot.sendMessage(msg.chat.id, "Please choose your language", options);
     // }
 
-    FirstSection.Start(msg, users)
+    FirstSection.Start(msg, chatId, Room)
 
-    FirstSection.Main(msg, chatId, name, Room)
+    FirstSection.Main(msg, chatId, name, Room, users, User)
 
     RoomAction.RoomMsg(msg, Room, name)
 
     SuhbatMsg.Chatting(msg, users, chatId, mainOption, name)
 });
 
-
+ 
 app.listen(process.env.PORT || 5000, async () => {
     console.log('🚀 app running on port', process.env.PORT || 5000)
 })

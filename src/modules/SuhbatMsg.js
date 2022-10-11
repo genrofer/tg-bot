@@ -60,7 +60,7 @@ const Chatting = (msg, users, chatId, mainOption, name) => {
                     } else if (msg.sticker) {
                          const sticker = msg.sticker?.file_id;
                          axios.get(`${sendSticker}?chat_id=${item.connected}&sticker=${sticker}`)
-                    } else if (msg.animation) {
+                    } else if (msg.animation) { 
                          const gif = msg.animation?.file_id
                          axios.get(`${sendAnimation}?chat_id=${item.connected}&animation=${gif}`)
                     } else if (msg.audio) {
@@ -70,11 +70,11 @@ const Chatting = (msg, users, chatId, mainOption, name) => {
                }
           }
           if (item.user_id == chatId) {
-               if (Number(item.connected) < 100 && item.is_active == true && msg.text != '/start' && msg.text != `${hiddenInfo}`) {
+               if (Number(item.connected) < 100 && item.is_active == true && msg.text != '/start' && msg.text != `${hiddenInfo}` && msg.text != `Main 🏠`) {
                     bot.sendMessage(chatId, `Sizga suhbatdosh qidiryapma-a-a-a-n !!!!!`)
                }
           }
-     })
+     }) 
 }
 
 module.exports = {

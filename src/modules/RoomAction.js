@@ -5,6 +5,21 @@ const bot = new TelegramBot(token);
 
 const { roomLang, roomMemberCount, deleteRoom, mainOption, roomConfirm, exitRoom, option } = require("../modules/Options")
 
+const vaqt = new Date()
+const year = vaqt.getFullYear()
+const monthes = vaqt.getMonth()
+const day = vaqt.getDate()
+const hour = vaqt.getHours()
+const minute = vaqt.getMinutes()
+
+var month;
+
+if(monthes < 10){
+     month = `0${monthes}`
+} else {
+     month = monthes
+}
+
 const RoomAction = async (action, msg, chatId, Room, name) => {
      const Rooms = await Room.find({})
      const all_rooms = []
@@ -122,8 +137,33 @@ const RoomAction = async (action, msg, chatId, Room, name) => {
                                         roomMembers.push(member.user_id)
                                    }
                               })
-                              if (memberHasRoom[0] == chatId) {
-                                   bot.sendMessage(chatId, `Siz ${userHasRoom[0].room_name} qo'shilgansiz. Chiqishni xoxlaysizmi?`, exitRoom)
+                              let user_room = {}
+                              const Rooms = await Room.find({})
+                              const all_rooms = []
+                              const selectedRoom = []
+                              var userRoom;
+
+                              Rooms?.map(room => {
+                                   all_rooms?.push(room.creator_id)
+                                   if (room.creator_id == chatId) {
+                                        selectedRoom.push(room)
+                                   }
+                                   if (room.creator_id == chatId) {
+                                        user_room = room
+                                   }
+
+                                   room.room_members?.map(member => {
+                                        if (member.user_id == chatId) {
+                                             userRoom = true
+                                             user_room = room
+                                        }
+                                   })
+                              })
+
+                              if (all_rooms.includes(chatId) && selectedRoom[0].room_active == true) {
+                                   bot.sendMessage(chatId, `Sizning ${user_room.room_name} nomli xonangiz mavjud. Uni o'chirishni xoxlaysizmi ?`, deleteRoom)
+                              } else if (userRoom) {
+                                   bot.sendMessage(chatId, `Siz ${user_room.room_name} nomli xonada borsiz. Uni tark etishni xoxlaysizmi ?`, exitRoom)
                               } else {
                                    try {
                                         await Room.findById(splitedAction[1], (err, updatedUser) => {
@@ -154,10 +194,10 @@ const RoomAction = async (action, msg, chatId, Room, name) => {
                                         }
                                    })
 
-                                   const activeAzolar = [] 
+                                   const activeAzolar = []
 
                                    room.room_members?.map(mem => {
-                                        if(mem.user_id != 0 && mem.user_id != chatId){
+                                        if (mem.user_id != 0 && mem.user_id != chatId) {
                                              activeAzolar.push(`${mem.name}`)
                                         }
                                    })
@@ -202,9 +242,6 @@ const RoomAction = async (action, msg, chatId, Room, name) => {
                })
           })
 
-          console.log(all_rooms)
-          console.log(selectedRoom)
-
           if (all_rooms.includes(chatId) && selectedRoom[0].room_active == false) {
                await Room.findByIdAndRemove(selectedRoom[0]._id).exec()
           }
@@ -222,7 +259,8 @@ const RoomAction = async (action, msg, chatId, Room, name) => {
                     room_language: 'undefined',
                     room_members_count: 0,
                     room_members: [],
-                    room_active: false
+                    room_active: false,
+                    room_created: `${hour}:${minute}  ${day}/${month}/${year}`
                })
                try { await room.save() } catch (error) { console.log(error) }
                bot.sendMessage(chatId, `Roomga ism kiriting \n\nMasalan: Suhbatlashish`)
@@ -317,6 +355,12 @@ const RoomAction = async (action, msg, chatId, Room, name) => {
                }
           }) : null
 
+          bot.sendMessage(chatId, `<i>exited</i>`, {
+               reply_markup: {
+                    remove_keyboard: true
+               },
+               parse_mode: 'HTML'
+          })
           bot.sendMessage(chatId, `Siz ${selectedRoom[0]?.room_name} guruhidan chiqdingiz`, mainOption)
      }
 
@@ -364,7 +408,7 @@ const RoomMsg = async (msg, Room, name) => {
 
      if (joinedMembers.length > 0) {
           joinedMembers.map(item => {
-               if (msg.text != '/start' && msg.text != '/leave' && splitedMsg[0] != 'leave') {
+               if (msg.text != '/start' && msg.text != '/leave' && splitedMsg[0] != 'leave' && msg.text != 'Main 🏠') {
                     bot.sendMessage(item, `<i><b>${name}</b></i>\n${msg.text}`, {
                          reply_markup: {
                               keyboard: [
@@ -376,7 +420,7 @@ const RoomMsg = async (msg, Room, name) => {
                          },
                          parse_mode: 'HTML'
                     })
-               }
+               } 
           })
      }
 
@@ -393,12 +437,12 @@ const RoomMsg = async (msg, Room, name) => {
                     }
                })
           })
-          selectedRoom[0]?.room_members.length > 0 ? selectedRoom[0].room_members.map(async member => {
+          selectedRoom[0]?.room_members?.length > 0 ? selectedRoom[0].room_members?.map(async member => {
                roomMembers.push(member.user_id)
           }) : null
           try {
                await Room.findById(selectedRoom[0]?._id, (err, deleteUserRoom) => {
-                    deleteUserRoom.room_members[selectedUser[0].id - 1] = {
+                    deleteUserRoom.room_members[selectedUser[0]?.id - 1] = {
                          id: selectedUser[0].id,
                          user_id: 0,
                          name: 'undefined',
@@ -409,7 +453,7 @@ const RoomMsg = async (msg, Room, name) => {
           } catch (error) {
                console.log(error)
           }
-          roomMembers.length > 0 ? roomMembers.map(item => {
+          roomMembers?.length > 0 ? roomMembers?.map(item => {
                if (item != 0 && item != chatId) {
                     bot.sendMessage(item, `${msg.chat.first_name} guruhni tark etdi.`)
                }
@@ -428,7 +472,7 @@ const RoomMsg = async (msg, Room, name) => {
                          if (member.user_id != chatId) {
                               room.room_members?.map(delRoom => {
                                    if (delRoom.user_id != chatId) {
-                                        roomUsers.push(delRoom.user_id)
+                                        roomUsers?.push(delRoom.user_id)
                                    }
                               })
                          }

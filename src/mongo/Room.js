@@ -27,6 +27,10 @@ const RoomSchema = new mongoose.Schema({
      },
      room_active: {
           type: Boolean
+     },
+     room_created: {
+          type: String,
+          required: true
      }
 })
 

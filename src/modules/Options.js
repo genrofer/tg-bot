@@ -111,6 +111,20 @@ var exitRoom = {
      "parse_mode": "HTML"
 }
 
+var replyKeyboard = {
+     reply_markup: JSON.stringify({
+          keyboard: [
+               [{
+                    text: 'Main 🏠',
+               }, {
+                    text: '🇫🇷 Français',
+               }]
+          ],
+          resize_keyboard: true
+     }),
+     "parse_mode": "HTML"
+};
+
 
 module.exports = {
      mainOption,
@@ -125,5 +139,6 @@ module.exports = {
      roomMemberCount,
      deleteRoom,
      roomConfirm,
-     exitRoom
+     exitRoom,
+     replyKeyboard
 }

@@ -3,7 +3,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const token = process.env.TOKEN;
 const bot = new TelegramBot(token);
 
-const { option, exitRoom } = require("../modules/Options")
+const { option, exitRoom, replyKeyboard } = require("../modules/Options")
 
 const SuhbatAction = async (action, msg, chatId, name, username, users, userLength, User, Room) => {
      if (action === 'suhbat') {
@@ -82,7 +82,7 @@ const SuhbatAction = async (action, msg, chatId, name, username, users, userLeng
                          connected: 0
                     })
                     try { await user.save() } catch (error) { сonsole.log(error) }
-                    bot.sendMessage(chatId, 'Sizga mos suhbatdosh qidirlmoqda...7')
+                    bot.sendMessage(chatId, 'Sizga mos suhbatdosh qidirlmoqda...7', replyKeyboard)
                }
           }
      }
